@@ -46,26 +46,7 @@ Route::get('/posts/{post}', function (Post $post) {
     return view('site.post', compact('post'));
 })->name('posts.show');
 
-Route::get('/search', function () {
-    $q   = request('q', '');
-    $cat = request('cat');
-
-    $postsQuery = Post::query();
-
-    if ($q !== '') {
-        $postsQuery->where('title', 'like', "%$q%");
-    }
-
-    if ($cat) {
-        $postsQuery->whereHas('category', fn ($c) => $c->where('name', $cat));
-    }
-
-    $posts = $postsQuery->latest()
-        ->paginate(10)
-        ->appends(['q' => $q, 'cat' => $cat]);
-
-    return view('site.search', compact('posts', 'q', 'cat'));
-})->name('search');
+Route::get('/search', [PostController::class, 'search'])->name('search');
 
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');

@@ -8,6 +8,13 @@
   <meta name="theme-color" content="#007bff" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)" />
 
+<script>
+  (function () {
+    const savedTheme = localStorage.getItem('alpha_admin_theme') || 'dark';
+    document.documentElement.setAttribute('data-admin-theme', savedTheme);
+  })();
+</script>
+
   <link
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
@@ -29,7 +36,7 @@
   />
 
   <link rel="stylesheet" href="{{ asset('adminlte/css/adminlte.css') }}" />
-
+  <link rel="stylesheet" href="{{ asset('admin/css/admin-theme.css') }}">
   @stack('styles')
 </head>
 
@@ -50,14 +57,21 @@
         </li>
       </ul>
 
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item">
-          <form method="POST" action="{{ route('logout') }}" class="d-inline">
+<ul class="navbar-nav ms-auto align-items-center">
+    <li class="nav-item me-2 d-flex align-items-center">
+        <button class="admin-theme-toggle" type="button" id="adminThemeToggle" aria-label="Toggle dashboard theme">
+            <span class="admin-theme-icon admin-theme-sun">☀</span>
+            <span class="admin-theme-icon admin-theme-moon">☾</span>
+        </button>
+    </li>
+
+    <li class="nav-item d-flex align-items-center">
+        <form action="{{ route('logout') }}" method="POST" class="mb-0">
             @csrf
-            <button class="btn btn-sm btn-outline-secondary" type="submit">Logout</button>
-          </form>
-        </li>
-      </ul>
+            <button type="submit" class="btn btn-outline-secondary btn-sm">Logout</button>
+        </form>
+    </li>
+</ul>
     </div>
   </nav>
 
@@ -245,7 +259,7 @@
     }
   });
 </script>
-
+<script src="{{ asset('admin/js/admin-theme.js') }}"></script>
 @stack('scripts')
 </body>
 </html>

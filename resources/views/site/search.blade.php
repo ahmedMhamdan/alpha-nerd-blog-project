@@ -4,98 +4,367 @@
 
 @push('styles')
 <style>
-  .searchbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-  .input{
-    flex:1 1 260px;border:1px solid var(--border);background:rgba(11,15,20,.35);
-    color:var(--text);border-radius:12px;padding:11px 12px;outline:0;font-family:inherit;
-    font-size:12px;min-width:240px;
-  }
-  .btn{
-    border:1px solid var(--border);background:transparent;color:var(--text);
-    padding:10px 12px;border-radius:12px;cursor:pointer;font-weight:900;font-family:inherit;font-size:12px;
-    text-decoration:none;display:inline-flex;align-items:center;justify-content:center;
-  }
-  .btn:hover{border-color:color-mix(in srgb, var(--accent) 55%, var(--border))}
-  .btn.primary{background:var(--accent);color:#0B0F14;border-color:transparent}
-  .filters{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-  .result-meta{color:var(--muted);font-size:12px;margin-top:10px}
-
-  .chip-link{
-    display:inline-flex;align-items:center;justify-content:center;
-    padding:8px 12px;border-radius:999px;border:1px solid var(--border);
-    background:rgba(11,15,20,.25);color:var(--muted);text-decoration:none;
-    font-size:12px;font-weight:900;transition:.15s ease;
-  }
-  .chip-link:hover{
-    border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
-    color: var(--text);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 14%, transparent);
-  }
-  .chip-link.active{
-    background: color-mix(in srgb, var(--accent) 12%, transparent);
-    border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
-    color: var(--text);
+  .search-hero{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:18px;
   }
 
-  .sr-card{display:flex;gap:16px;align-items:center;}
-  .sr-thumb{flex:0 0 230px;width:230px;display:block;text-decoration:none;color:inherit;}
-  .sr-thumb .thumb{width:100%;height:140px;display:block;border-radius:14px;object-fit:cover;}
-  .sr-thumb > .thumb{width:100%;height:140px;border-radius:14px;}
-  .sr-content{flex:1;min-width:0;}
-  .sr-content .badge{position:static !important;margin-bottom:8px;display:inline-flex;}
-  .sr-content .title{margin:0;}
-
-  @media (max-width:700px){
-    .sr-card{flex-direction:column;align-items:stretch;}
-    .sr-thumb{width:100%;flex:0 0 auto;}
-    .sr-thumb .thumb,.sr-thumb > .thumb{height:220px;}
+  .search-top{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:18px;
+    flex-wrap:wrap;
   }
+
+  .search-desc{
+    max-width:720px;
+    margin:0;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.8;
+  }
+
+  .search-box{
+    margin-top:18px;
+    padding:16px;
+    border:1px solid rgba(163,230,53,.14);
+    border-radius:20px;
+    background:rgba(7,11,10,.42);
+  }
+
+  .searchbar{
+    display:grid;
+    grid-template-columns:1fr auto auto;
+    gap:12px;
+    align-items:center;
+  }
+
+  .search-input-wrap{
+    position:relative;
+  }
+
+  .search-icon{
+    position:absolute;
+    left:14px;
+    top:50%;
+    transform:translateY(-50%);
+    width:18px;
+    height:18px;
+    color:var(--muted);
+    pointer-events:none;
+  }
+
+  .searchbar .input{
+    padding-left:42px;
+    min-height:46px;
+  }
+
+  .result-meta{
+    margin-top:14px;
+    color:var(--muted);
+    font-size:12px;
+    line-height:1.8;
+  }
+
+  .result-meta strong{
+    color:var(--accent);
+  }
+
+  .search-card{
+    display:flex;
+    gap:18px;
+    align-items:center;
+  }
+
+  .search-thumb{
+    flex:0 0 250px;
+    width:250px;
+    display:block;
+  }
+
+  .search-thumb .thumb,
+  .search-thumb > .thumb{
+    width:100%;
+    height:155px;
+    border-radius:18px;
+    object-fit:cover;
+  }
+
+  .search-content{
+    flex:1;
+    min-width:0;
+  }
+
+  .search-content .badge{
+    margin-bottom:10px;
+  }
+
+  .search-title-row{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+
+  .read-more{
+    color:var(--accent);
+    font-size:12px;
+    font-weight:900;
+    white-space:nowrap;
+  }
+
+  .empty-state{
+    text-align:center;
+    padding:44px 18px;
+    border:1px dashed rgba(163,230,53,.22);
+    border-radius:22px;
+    background:rgba(7,11,10,.35);
+  }
+
+  .empty-icon{
+    width:56px;
+    height:56px;
+    margin:0 auto 14px;
+    display:grid;
+    place-items:center;
+    border-radius:18px;
+    border:1px solid rgba(163,230,53,.18);
+    background:rgba(163,230,53,.07);
+    color:var(--accent);
+  }
+
+  .empty-icon svg{
+    width:26px;
+    height:26px;
+  }
+
+  .empty-state h3{
+    margin:0 0 8px;
+    font-family:'Orbitron', sans-serif;
+    font-size:20px;
+  }
+
+  .empty-state p{
+    margin:0;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.7;
+  }
+
+  @media (max-width:800px){
+    .searchbar{
+      grid-template-columns:1fr;
+    }
+
+    .search-card{
+      flex-direction:column;
+      align-items:stretch;
+    }
+
+    .search-thumb{
+      width:100%;
+      flex:0 0 auto;
+    }
+
+    .search-thumb .thumb,
+    .search-thumb > .thumb{
+      height:230px;
+    }
+  }
+  .category-slider-wrap{
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top:14px;
+}
+
+.category-slider{
+  flex:1;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  overflow-x:auto;
+  scroll-behavior:smooth;
+  padding:4px 2px 10px;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(163,230,53,.35) transparent;
+}
+
+.category-slider::-webkit-scrollbar{
+  height:7px;
+}
+
+.category-slider::-webkit-scrollbar-track{
+  background:rgba(255,255,255,.04);
+  border-radius:999px;
+}
+
+.category-slider::-webkit-scrollbar-thumb{
+  background:rgba(163,230,53,.35);
+  border-radius:999px;
+}
+
+.category-slider .chip-link{
+  flex:0 0 auto;
+  max-width:360px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.cat-slide-btn{
+  width:38px;
+  height:38px;
+  flex:0 0 38px;
+  display:grid;
+  place-items:center;
+  border-radius:999px;
+  border:1px solid rgba(163,230,53,.18);
+  background:rgba(7,11,10,.66);
+  color:var(--text);
+  cursor:pointer;
+  font-size:20px;
+  font-weight:900;
+  transition:.18s ease;
+}
+
+.cat-slide-btn:hover{
+  color:var(--accent);
+  border-color:rgba(163,230,53,.45);
+  box-shadow:0 0 0 4px rgba(163,230,53,.07);
+}
+
+html[data-theme="light"] .cat-slide-btn{
+  background:#ffffff !important;
+  border:1px solid #d9e2dc !important;
+  color:#334155 !important;
+  box-shadow:0 8px 20px rgba(15,23,42,.08) !important;
+}
+
+html[data-theme="light"] .cat-slide-btn:hover{
+  background:#f0fdf4 !important;
+  border-color:#16a34a !important;
+  color:#16a34a !important;
+}
+
+html[data-theme="light"] .category-slider::-webkit-scrollbar-track{
+  background:#eef2f0;
+}
+
+html[data-theme="light"] .category-slider::-webkit-scrollbar-thumb{
+  background:#cbd5e1;
+}
+
+html[data-theme="light"] .category-slider::-webkit-scrollbar-thumb:hover{
+  background:#16a34a;
+}
+
+@media (max-width:700px){
+  .cat-slide-btn{
+    display:none;
+  }
+
+  .category-slider .chip-link{
+    max-width:260px;
+  }
+}
 </style>
 @endpush
 
 @section('content')
 
-<section class="section">
-  <div class="section-head">
-    <h2 class="small-title">Search</h2>
+<section class="section search-hero">
+  <div class="search-top">
+    <div>
+      <h2 class="small-title">Search</h2>
+      <p class="search-desc">
+        Search inside Alpha Nerd posts and filter content by category. This page demonstrates
+        dynamic Laravel queries, filters, pagination, and clean result rendering.
+      </p>
+    </div>
+
+    <a class="btn-outline" href="{{ route('home') }}">Back Home</a>
   </div>
 
-  <form class="searchbar" action="{{ route('search') }}" method="get">
-    <input class="input" name="q" placeholder="Search posts..." value="{{ $q ?? '' }}" />
+  <div class="search-box">
+    <form class="searchbar" action="{{ route('search') }}" method="get">
+      <div class="search-input-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7"></circle>
+          <path d="M21 21l-4.3-4.3"></path>
+        </svg>
 
-    @if(!empty($cat))
-      <input type="hidden" name="cat" value="{{ $cat }}">
-    @endif
+        <input
+          class="input"
+          name="q"
+          placeholder="Search posts by title or content..."
+          value="{{ $q ?? '' }}"
+        />
+      </div>
 
-    <button class="btn primary" type="submit">Search</button>
-    <a class="btn" href="{{ route('home') }}">Home</a>
-  </form>
+      @if(!empty($cat))
+        <input type="hidden" name="cat" value="{{ $cat }}">
+      @endif
 
-  <div class="filters" aria-label="Filters">
-    <a class="chip-link {{ empty($cat) ? 'active' : '' }}" href="{{ route('search', ['q' => $q]) }}">All</a>
-    <a class="chip-link {{ ($cat ?? '') === 'General' ? 'active' : '' }}" href="{{ route('search', ['q' => $q, 'cat' => 'General']) }}">General</a>
-    <a class="chip-link {{ ($cat ?? '') === 'Cyber' ? 'active' : '' }}" href="{{ route('search', ['q' => $q, 'cat' => 'Cyber']) }}">Cyber</a>
-    <a class="chip-link {{ ($cat ?? '') === 'Tools' ? 'active' : '' }}" href="{{ route('search', ['q' => $q, 'cat' => 'Tools']) }}">Tools</a>
+      <button class="btn primary" type="submit">Search</button>
+      <a class="btn-outline" href="{{ route('search') }}">Clear</a>
+    </form>
+
+<div class="category-slider-wrap" style="margin-top:14px;">
+  <button class="cat-slide-btn left" type="button" onclick="scrollSearchCats(-1)" aria-label="Scroll categories left">
+    ‹
+  </button>
+
+  <div class="category-slider" id="searchCategorySlider" aria-label="Search filters">
+    <a class="chip-link {{ empty($cat) ? 'active' : '' }}"
+       href="{{ route('search', ['q' => $q]) }}">
+      All
+    </a>
+
+    @foreach($categories as $category)
+      <a class="chip-link {{ ($cat ?? '') === $category->name ? 'active' : '' }}"
+         href="{{ route('search', ['q' => $q, 'cat' => $category->name]) }}"
+         title="{{ $category->name }}">
+        {{ ucfirst($category->name) }}
+      </a>
+    @endforeach
   </div>
 
-  <div class="result-meta">
-    @if(($q ?? '') !== '')
-      Showing {{ $posts->total() }} results for <strong>“{{ $q }}”</strong>
-    @else
-      Showing {{ $posts->total() }} results
-    @endif
+  <button class="cat-slide-btn right" type="button" onclick="scrollSearchCats(1)" aria-label="Scroll categories right">
+    ›
+  </button>
+</div>
 
-    @if(!empty($cat))
-      <span style="color:var(--muted); font-size:12px;"> • filtered by <strong>{{ $cat }}</strong></span>
-    @endif
+    <div class="result-meta">
+      @if(($q ?? '') !== '')
+        Showing <strong>{{ $posts->total() }}</strong> results for <strong>“{{ $q }}”</strong>
+      @else
+        Showing <strong>{{ $posts->total() }}</strong> results
+      @endif
+
+      @if(!empty($cat))
+        <span> • filtered by <strong>{{ $cat }}</strong></span>
+      @endif
+    </div>
   </div>
 </section>
 
-<section class="section" style="margin-top:18px;">
+<section class="section" style="margin-top:24px;">
+  <div class="section-head">
+    <div>
+      <h2 class="small-title">Results</h2>
+      <p class="muted" style="margin:0;">Browse matched posts with category, author, date, and preview.</p>
+    </div>
+  </div>
+
   <div class="post-list">
     @forelse($posts as $post)
-      <article class="post-card sr-card">
-        <a class="sr-thumb" href="{{ route('posts.show', $post) }}">
+      <article class="post-card search-card">
+        <a class="search-thumb" href="{{ route('posts.show', $post) }}">
           @if($post->image)
             <img class="thumb" src="{{ asset($post->image) }}" alt="{{ $post->title }}">
           @else
@@ -103,29 +372,57 @@
           @endif
         </a>
 
-        <div class="sr-content">
-          <span class="badge"><span class="dot"></span>{{ $post->category?->name ?? 'General' }}</span>
+        <div class="search-content">
+          <span class="badge">
+            <span class="dot"></span>
+            {{ $post->category?->name ?? 'General' }}
+          </span>
 
-          <a href="{{ route('posts.show', $post) }}" style="text-decoration:none;">
-            <h3 class="title">{{ $post->title }}</h3>
-          </a>
+          <div class="search-title-row">
+            <a href="{{ route('posts.show', $post) }}">
+              <h3 class="title">{{ $post->title }}</h3>
+            </a>
+          </div>
 
           <div class="meta">
             <span>{{ $post->created_at->toFormattedDateString() }}</span>
-            <span>by {{ $post->author?->name ?? 'Admin' }}</span>
+            <span>by Admin</span>
           </div>
 
-          <p class="excerpt">{{ \Illuminate\Support\Str::limit($post->content, 140) }}</p>
+          <p class="excerpt">{{ \Illuminate\Support\Str::limit($post->content, 155) }}</p>
         </div>
       </article>
     @empty
-      <p style="color:var(--muted); margin:0;">No results.</p>
+      <div class="empty-state">
+        <div class="empty-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="M21 21l-4.3-4.3"></path>
+          </svg>
+        </div>
+
+        <h3>No results found</h3>
+        <p>Try another keyword or clear the filters to browse all posts.</p>
+      </div>
     @endforelse
   </div>
 
-  <div style="margin-top:16px;">
-    {{ $posts->links('pagination::bootstrap-5') }}
+  <div style="margin-top:18px;">
+    {{ $posts->appends(request()->query())->links('vendor.pagination.cyber') }}
   </div>
 </section>
+@push('scripts')
+<script>
+  function scrollSearchCats(direction) {
+    const slider = document.getElementById('searchCategorySlider');
 
+    if (!slider) return;
+
+    slider.scrollBy({
+      left: direction * 280,
+      behavior: 'smooth'
+    });
+  }
+</script>
+@endpush
 @endsection

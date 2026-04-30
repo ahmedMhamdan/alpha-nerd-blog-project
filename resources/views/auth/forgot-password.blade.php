@@ -1,25 +1,48 @@
 <x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+  <h2 class="auth-title">Reset Password</h2>
+  <p class="auth-subtitle">
+    Forgot your password? Enter your email and Laravel will send a reset link if email service is configured.
+  </p>
+
+  @if (session('status'))
+    <div class="auth-status">
+      {{ session('status') }}
+    </div>
+  @endif
+
+  <form method="POST" action="{{ route('password.email') }}" class="auth-form">
+    @csrf
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        id="email"
+        class="auth-input"
+        type="email"
+        name="email"
+        value="{{ old('email') }}"
+        required
+        autofocus
+        placeholder="name@example.com"
+      >
+
+      @error('email')
+        <div class="auth-error">{{ $message }}</div>
+      @enderror
     </div>
 
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+    <div class="auth-row">
+      <a class="auth-link" href="{{ route('login') }}">
+        Back to login
+      </a>
 
-    <form method="POST" action="{{ route('password.email') }}">
-        @csrf
+      <button type="submit" class="auth-btn">
+        Send Reset Link
+      </button>
+    </div>
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Email Password Reset Link') }}
-            </x-primary-button>
-        </div>
-    </form>
+    <div class="auth-footer-note">
+      In local development, password reset requires mail configuration in the .env file.
+    </div>
+  </form>
 </x-guest-layout>

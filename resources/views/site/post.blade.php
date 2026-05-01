@@ -254,7 +254,7 @@
 
         <div class="meta">
           <span>{{ $post->created_at->toFormattedDateString() }}</span>
-          <span>by {{ $post->author?->name ?? 'Admin' }}</span>
+          <span>by Admin</span>
         </div>
       </div>
     </div>
@@ -278,7 +278,7 @@
 
         <div class="side-item">
           <span>Author</span>
-          <strong>{{ $post->author?->name ?? 'Admin' }}</strong>
+          <strong>Admin</strong>
         </div>
 
         <div class="side-item">

@@ -79,10 +79,6 @@ GitHub → Render Docker Web Service → Laravel Application → Neon PostgreSQL
 ---
 
 ## Screenshots
-
-> Screenshot paths are written with encoded spaces (`%20`) so GitHub renders them correctly.  
-> If you replace any screenshot, keep the same file name inside `public/screenshots/`.
-
 ### Public Website — Desktop
 
 #### Homepage

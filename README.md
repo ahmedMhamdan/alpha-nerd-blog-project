@@ -1,6 +1,7 @@
 # Alpha Nerd — Laravel Blog & Admin Dashboard
 
-Alpha Nerd is a Laravel portfolio project that combines a public cybersecurity-style blog with an admin dashboard. The project includes authentication, admin-only management pages, posts, categories, comments, contact messages, image uploads, search, pagination, soft delete workflows, dark/light mode, and responsive mobile-friendly UI.
+Alpha Nerd is a Laravel portfolio project that combines a public cybersecurity-style blog with a secured admin dashboard.  
+The project includes authentication, admin-only management pages, posts, categories, comments, contact messages, image uploads, search, pagination, soft delete workflows, dark/light mode, Docker deployment, and responsive mobile-friendly UI.
 
 **Live Demo:** https://alpha-nerd-blog-project.onrender.com  
 **Repository:** https://github.com/ahmedMhamdan/alpha-nerd-blog-project
@@ -9,12 +10,16 @@ Alpha Nerd is a Laravel portfolio project that combines a public cybersecurity-s
 
 ## Project Overview
 
-Alpha Nerd was built as a practical Laravel project to demonstrate real backend development concepts in a complete web application. The public website allows visitors to browse posts, filter content by category, search through posts, read single post pages, and send contact messages. The admin dashboard allows authorized admins to manage the main website content through CRUD operations and soft delete workflows.
+Alpha Nerd was built as a practical Laravel project to demonstrate real backend development concepts in a complete web application.
 
-The project was also deployed online using a production-like flow:
+The public website allows visitors to browse posts, filter content by category, search through posts, read single post pages, and send contact messages.
+
+The admin dashboard allows authorized admins to manage website content through CRUD operations, soft delete archive pages, restore actions, and force delete workflows.
+
+The project was deployed online using this production-like flow:
 
 ```text
-GitHub → Render Docker Web Service → Laravel App → Neon PostgreSQL Database
+GitHub → Render Docker Web Service → Laravel Application → Neon PostgreSQL Database
 ```
 
 ---
@@ -74,7 +79,11 @@ GitHub → Render Docker Web Service → Laravel App → Neon PostgreSQL Databas
 ---
 
 ## Screenshots
-### Public Website
+
+> Screenshot paths are written with encoded spaces (`%20`) so GitHub renders them correctly.  
+> If you replace any screenshot, keep the same file name inside `public/screenshots/`.
+
+### Public Website — Desktop
 
 #### Homepage
 ![Homepage](public/screenshots/home%20site.png)
@@ -94,9 +103,13 @@ GitHub → Render Docker Web Service → Laravel App → Neon PostgreSQL Databas
 #### Contact Page
 ![Contact Page](public/screenshots/contact.png)
 
-### Mobile Responsive Screenshots
-![home mobile](public/screenshots/home mobile.png)
-![search mobile Page](public/screenshots/search mobile.png)
+### Public Website — Mobile
+
+#### Mobile Homepage
+![Mobile Homepage](public/screenshots/home%20mobile.png)
+
+#### Mobile Search Page
+![Mobile Search Page](public/screenshots/search%20mobile.png)
 
 ### Authentication Pages
 
@@ -331,7 +344,9 @@ The seeder should only be run once in production. If needed, temporarily add thi
 php artisan db:seed --force
 ```
 
-Deploy once, confirm the data was inserted, then remove the line and deploy again. Keeping the seeder command permanently may duplicate posts, categories, or users after every restart/deploy.
+Deploy once, confirm the data was inserted, then remove the line and deploy again.
+
+Keeping the seeder command permanently may duplicate posts, categories, or users after every restart/deploy.
 
 ---
 
@@ -423,7 +438,6 @@ It also reflects secure web development basics such as protected admin routes, r
 
 ## Authors
 
-Ahmed  
-Fadi  
-4th-year Cybersecurity students at UCAS  
+Ahmed
+4th-year Cybersecurity student at UCAS  
 Interested in Laravel backend development, secure web applications, and cybersecurity.

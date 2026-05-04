@@ -2,16 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Post;
 use App\Models\Category;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
+    /**
+     * Folder used to store post images inside public/.
+     */
+    private string $postImagesPath = 'uploads/posts';
+
     public function index()
     {
-        $posts = Post::with('category')->oldest()->paginate(10);
+        $posts = Post::with('category')
+            ->oldest()
+            ->paginate(10);
 
         return view('admin.posts.index', compact('posts'));
     }
@@ -43,10 +52,7 @@ class PostController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $filename = time() . '_' . $request->file('image')->getClientOriginalName();
-            $request->file('image')->move(public_path('uploads/posts'), $filename);
-
-            $data['image'] = 'uploads/posts/' . $filename;
+            $data['image'] = $this->uploadPostImage($request);
         }
 
         $data['user_id'] = Auth::id();
@@ -89,14 +95,8 @@ class PostController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            if ($post->image && file_exists(public_path($post->image))) {
-                unlink(public_path($post->image));
-            }
-
-            $filename = time() . '_' . $request->file('image')->getClientOriginalName();
-            $request->file('image')->move(public_path('uploads/posts'), $filename);
-
-            $data['image'] = 'uploads/posts/' . $filename;
+            $this->deletePostImage($post->image);
+            $data['image'] = $this->uploadPostImage($request);
         } else {
             unset($data['image']);
         }
@@ -110,6 +110,7 @@ class PostController extends Controller
 
     public function destroy(Post $post)
     {
+        // Soft delete only. Image stays until force delete.
         $post->delete();
 
         return redirect()
@@ -131,9 +132,7 @@ class PostController extends Controller
     {
         $post = Post::onlyTrashed()->findOrFail($id);
 
-        if ($post->image && file_exists(public_path($post->image))) {
-            unlink(public_path($post->image));
-        }
+        $this->deletePostImage($post->image);
 
         $post->forceDelete();
 
@@ -147,9 +146,7 @@ class PostController extends Controller
         $q = $request->get('q');
         $cat = $request->get('cat');
 
-        $categories = Category::query()
-            ->orderBy('name')
-            ->get();
+        $categories = Category::orderBy('name')->get();
 
         $posts = Post::query()
             ->with('category')
@@ -165,8 +162,53 @@ class PostController extends Controller
                 });
             })
             ->latest()
-            ->paginate(10);
+            ->paginate(10)
+            ->withQueryString();
 
         return view('site.search', compact('posts', 'categories', 'q', 'cat'));
+    }
+
+    /**
+     * Upload image to public/uploads/posts and return the relative path saved in DB.
+     */
+    private function uploadPostImage(Request $request): string
+    {
+        $this->ensureUploadDirectoryExists();
+
+        $file = $request->file('image');
+        $extension = strtolower($file->getClientOriginalExtension());
+        $filename = time() . '_' . Str::random(10) . '.' . $extension;
+
+        $file->move(public_path($this->postImagesPath), $filename);
+
+        return $this->postImagesPath . '/' . $filename;
+    }
+
+    /**
+     * Create the upload directory if it does not exist.
+     */
+    private function ensureUploadDirectoryExists(): void
+    {
+        $uploadPath = public_path($this->postImagesPath);
+
+        if (!File::exists($uploadPath)) {
+            File::makeDirectory($uploadPath, 0755, true);
+        }
+    }
+
+    /**
+     * Delete old image from public folder if it exists.
+     */
+    private function deletePostImage(?string $imagePath): void
+    {
+        if (!$imagePath) {
+            return;
+        }
+
+        $fullPath = public_path($imagePath);
+
+        if (File::exists($fullPath)) {
+            File::delete($fullPath);
+        }
     }
 }

@@ -23,4 +23,4 @@ COPY apache.conf /etc/apache2/sites-available/000-default.conf
 
 CMD ["bash", "start.sh"]
 
-chmod -R 775 storage bootstrap/cache public/uploads
+RUN chmod -R 775 storage bootstrap/cache public/uploads

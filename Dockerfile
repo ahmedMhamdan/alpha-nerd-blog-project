@@ -21,6 +21,15 @@ RUN chown -R www-data:www-data storage bootstrap/cache \
 
 COPY apache.conf /etc/apache2/sites-available/000-default.conf
 
+RUN chmod -R 775 storage bootstrap/cache public/uploads
+
+RUN mkdir -p public/uploads/posts \
+    && mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views bootstrap/cache \
+    && chown -R www-data:www-data storage bootstrap/cache public/uploads \
+    && chmod -R 775 storage bootstrap/cache public/uploads
+
 CMD ["bash", "start.sh"]
 
-RUN chmod -R 775 storage bootstrap/cache public/uploads
+
+
+

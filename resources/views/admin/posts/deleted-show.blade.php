@@ -17,13 +17,22 @@
     <p><strong>Category ID:</strong> {{ $post->category_id }}</p>
     <p><strong>Deleted At:</strong> {{ $post->deleted_at }}</p>
 
-    @if($post->image)
+    @php
+      $imagePath = $post->image ? ltrim($post->image, '/') : null;
+      $imageExists = $imagePath && file_exists(public_path($imagePath));
+    @endphp
+
+    @if($imageExists)
       <div class="mb-3">
         <img
-          src="{{ asset($post->image) }}"
+          src="{{ asset($imagePath) }}"
           alt="{{ $post->title }}"
           style="max-width:300px; width:100%; border-radius:12px; border:1px solid rgba(0,0,0,.12);"
         >
+      </div>
+    @elseif($post->image)
+      <div class="alert alert-warning py-2 mb-3">
+        Image path exists in database, but the image file is missing.
       </div>
     @endif
 

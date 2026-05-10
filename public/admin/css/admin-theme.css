@@ -1145,3 +1145,45 @@ html[data-admin-theme="dark"] textarea.form-control{
     text-align:center !important;
   }
 }
+/* Message show page */
+.admin-message-show .card-body p {
+  color: var(--admin-text) !important;
+  margin-bottom: 16px !important;
+}
+
+.admin-message-show .card-body strong {
+  color: var(--admin-text) !important;
+  font-weight: 800 !important;
+}
+
+.admin-message-box {
+  min-height: 90px !important;
+  line-height: 1.7 !important;
+  padding: 18px !important;
+  border-radius: 12px !important;
+  font-weight: 500 !important;
+}
+
+/* Light mode */
+html[data-admin-theme="light"] .admin-message-show .card-body p,
+html[data-admin-theme="light"] .admin-message-show .card-body strong {
+  color: #1f2937 !important;
+}
+
+html[data-admin-theme="light"] .admin-message-box {
+  background: #f8fafc !important;
+  color: #111827 !important;
+  border-color: #d1d5db !important;
+}
+
+/* Dark mode */
+html[data-admin-theme="dark"] .admin-message-show .card-body p,
+html[data-admin-theme="dark"] .admin-message-show .card-body strong {
+  color: #e5eef5 !important;
+}
+
+html[data-admin-theme="dark"] .admin-message-box {
+  background: #0f172a !important;
+  color: #e5eef5 !important;
+  border-color: #2b3d55 !important;
+}
